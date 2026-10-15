@@ -1,0 +1,14 @@
+# build output
+target/
+
+# IDE
+.idea/
+.vscode/
+.classpath
+.project
+.settings/
+
+# secrets / local files
+.env
+*.local
+*.log

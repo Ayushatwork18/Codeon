@@ -1,0 +1,357 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Codeon – Learn Python by doing</title>
+<style>
+:root{
+  --bg:#F4F2F0;--card:#FFFFFF;--ink:#57514C;--mute:#907564;--line:#D1CBC7;
+  --accent:#C3AA97;--brand:#907564;--brand2:#57514C;--code:#1E1B19;--code-bar:#2D2825;
+  --ok:#2E7D32;--bad:#C62828;--warn:#D97706;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1B1917;--card:#282422;--ink:#F4F2F0;--mute:#C3AA97;--line:#443E3B;
+    --accent:#C3AA97;--brand:#C3AA97;--brand2:#907564;--code:#141312;--code-bar:#242120;
+  }
+}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+[hidden]{display:none !important}
+h1,h2,h3{margin:0 0 .5rem;color:var(--ink)}h2{font-size:1.4rem}.mute{color:var(--mute)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 1px 3px rgba(87,81,76,.06)}
+button,.btn{font:inherit;border:0;border-radius:10px;padding:9px 16px;cursor:pointer;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;font-weight:600;transition:.15s}
+button:hover{filter:brightness(1.08);transform:translateY(-1px)}button:disabled{opacity:.6;cursor:wait}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}button.ghost:hover{background:var(--bg)}
+button.ghost-bad{background:transparent;color:var(--bad);border:1px solid var(--bad)}button.ghost-bad:hover{background:rgba(198,40,40,.08)}
+button.ok{background:var(--ok)}button.bad{background:var(--bad)}button.sm{padding:5px 10px;font-size:13px}
+input,select,textarea{font:inherit;width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);margin:4px 0 12px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--brand);border-color:transparent}label{font-weight:600;font-size:13px}
+textarea.code{font:14px/1.5 ui-monospace,Consolas,monospace;background:var(--code);color:#f4f2f0;min-height:260px;tab-size:4;white-space:pre;border-radius:0 0 10px 10px}
+/* auth */
+#auth{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 20% 10%,rgba(195,170,151,.35),transparent 50%),radial-gradient(circle at 90% 90%,rgba(144,117,100,.25),transparent 50%)}
+#auth .card{width:min(400px,100%);padding:28px}.logo{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,var(--brand),var(--brand2));-webkit-background-clip:text;color:transparent}
+.tabs{display:flex;gap:6px;margin:16px 0}.tabs button{flex:1;background:var(--bg);color:var(--mute);border:1px solid var(--line)}.tabs button.on{background:var(--brand);color:#fff}
+.demo{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+/* shell */
+#app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+aside{background:var(--card);border-right:1px solid var(--line);padding:20px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
+aside a{display:flex;gap:10px;padding:10px 12px;border-radius:10px;color:var(--mute);cursor:pointer;font-weight:600}aside a:hover{background:var(--bg)}aside a.on{background:rgba(195,170,151,.25);color:var(--brand)}
+.who{margin-top:auto;font-size:13px}main{padding:28px;max-width:1100px;width:100%}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}.stats{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.ex{cursor:pointer;transition:.15s;border:1px solid var(--line)}.ex:hover{transform:translateY(-3px);border-color:var(--brand)}
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:700}
+.EASY,.APPROVED{background:#dcfce7;color:#166534}.MEDIUM,.PENDING{background:#fef3c7;color:#92400e}.HARD,.REJECTED{background:#fee2e2;color:#991b1b}
+.BASIC{background:rgba(195,170,151,.25);color:#57514c}.ADVANCED{background:#fee2e2;color:#991b1b}
+.big{font-size:2rem;font-weight:800}.bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2))}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}th{color:var(--mute);font-size:12px;text-transform:uppercase}
+.work{display:grid;grid-template-columns:1fr 1.4fr;gap:16px}.console{background:var(--code);color:#f4f2f0;border-radius:10px;padding:12px;font:13px/1.5 ui-monospace,Consolas,monospace;white-space:pre-wrap;min-height:80px;margin-top:6px}
+.res{padding:10px 14px;border-radius:10px;margin-top:10px;font-weight:700}.res.pass{background:#dcfce7;color:#166534}.res.fail{background:#fee2e2;color:#991b1b}
+.chart{display:flex;align-items:flex-end;gap:14px;height:150px;margin-top:10px}.chart div{flex:1;text-align:center;font-size:12px}.chart .col{height:120px;display:flex;align-items:flex-end;justify-content:center}.chart .col i{width:60%;background:linear-gradient(var(--brand2),var(--brand));border-radius:6px 6px 0 0;min-height:3px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:10px 18px;border-radius:10px;font-weight:600;z-index:9}.toast.bad{background:var(--bad)}
+/* practice section tabs & editor */
+.sec-tabs{display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:12px}
+.sec-tab{padding:8px 16px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:600;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+.sec-tab:hover{background:var(--bg)}
+.sec-tab.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.sec-tab .count{font-size:12px;opacity:.9;padding:1px 6px;border-radius:10px;background:rgba(0,0,0,.08)}
+.sec-tab.on .count{background:rgba(255,255,255,.25)}
+.practice-list{display:flex;flex-direction:column;gap:8px}
+.ex-row{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:var(--card);border:1px solid var(--line);border-radius:12px;cursor:pointer;transition:.15s}
+.ex-row:hover{border-color:var(--brand);transform:translateY(-1px);box-shadow:0 2px 6px rgba(87,81,76,.08)}
+.ex-left{display:flex;align-items:center;gap:16px}
+.ex-num{font-weight:700;color:var(--mute);font-size:14px;min-width:28px}
+.ex-title{font-weight:600;font-size:15px;color:var(--ink)}
+.topic-strip{background:#7b4a2d;color:#ffffff;font-weight:700;padding:8px 14px;border-radius:8px;margin-bottom:14px;font-size:13px}
+.editor-header{background:var(--code-bar);color:#f4f2f0;border-radius:10px 10px 0 0;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-bottom:0}
+.lang-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);padding:2px 10px;border-radius:12px;font-size:12px;font-weight:700}
+.sample-box label{font-size:12px;color:var(--mute);font-weight:700;display:block;margin-bottom:3px}
+.sample-val{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:13px ui-monospace,Consolas,monospace;white-space:pre-wrap;margin:0;max-height:110px;overflow:auto;color:var(--ink)}
+.learn-box{background:rgba(195,170,151,.18);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin:12px 0}
+.learn-box b{color:var(--brand);display:block;font-size:13px;margin-bottom:4px}
+@media(max-width:800px){#app{grid-template-columns:1fr}aside{position:fixed;bottom:0;top:auto;height:auto;width:100%;flex-direction:row;justify-content:space-around;z-index:5;border-top:1px solid var(--line);border-right:0;padding:8px}aside .logo,.who{display:none}aside a{flex-direction:column;align-items:center;font-size:12px;gap:2px;padding:6px 10px}main{padding:16px 16px 90px}.work{grid-template-columns:1fr}}
+</style></head><body>
+<div id="auth" hidden><div class="card"><div class="logo">🐍 Codeon</div><p class="mute">Write Python. Run it. Get instant feedback.</p>
+<div class="tabs"><button id="t1" class="on" onclick="tab(1)">Log in</button><button id="t2" onclick="tab(2)">Sign up</button></div>
+<div id="nm" hidden><label>Name</label><input id="name" autocomplete="name" onkeydown="if(event.key==='Enter')submitAuth()"></div>
+<label>Email</label><input id="email" type="email" autocomplete="email" onkeydown="if(event.key==='Enter')submitAuth()"><label>Password</label><input id="pw" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')submitAuth()">
+<button id="go" style="width:100%" onclick="submitAuth()">Log in</button>
+<p class="mute" style="margin:14px 0 4px;font-size:13px">Demo accounts (click to fill):</p>
+<div class="demo"><button class="ghost sm" onclick="demo('student')">Student</button><button class="ghost sm" onclick="demo('teacher')">Instructor</button><button class="ghost sm" onclick="demo('admin')">Admin</button></div></div></div>
+<div id="app" hidden><aside><div class="logo" style="margin:0 0 14px 8px">🐍 Codeon</div><div id="nav" style="display:contents"></div>
+<div class="who"><b id="uname"></b><div class="mute" id="urole"></div><button class="ghost sm" style="margin-top:8px" onclick="logout()">Log out</button></div></aside><main id="main"></main></div>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function api(p,m='GET',b){const r=await fetch('api/'+p,{method:m,headers:{'Content-Type':'application/json'},body:b?JSON.stringify(b):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Request failed');return d}
+function toast(m,bad){const t=document.createElement('div');t.className='toast'+(bad?' bad':'');t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),2800)}
+let me=null,EX=[],mode=1,currentSection='BASIC';
+const NAV={
+  STUDENT:[['practice','Practice','▤'],['progress','Progress','◔']],
+  INSTRUCTOR:[['mine','My exercises','▤'],['create','Create practice','＋']],
+  ADMIN:[['overview','Overview','◔'],['review','Exercises','✓'],['users','Users','☺']]
+};
+const DEMO={student:['student@demo.com','student123'],teacher:['teacher@demo.com','teacher123'],admin:['admin@demo.com','admin123']};
+function demo(k){$('#email').value=DEMO[k][0];$('#pw').value=DEMO[k][1];tab(1)}
+function tab(n){mode=n;$('#t1').className=n==1?'on':'';$('#t2').className=n==2?'on':'';$('#nm').hidden=n==1;$('#go').textContent=n==1?'Log in':'Create student account'}
+async function submitAuth(){try{if(mode==2){await api('auth/register','POST',{name:$('#name').value,email:$('#email').value,password:$('#pw').value});toast('Account created – log in now');tab(1)}else{me=await api('auth/login','POST',{email:$('#email').value,password:$('#pw').value});start()}}catch(e){toast(e.message,1)}}
+async function logout(){await api('auth/logout','POST');location.reload()}
+function start(){$('#auth').hidden=true;$('#app').hidden=false;$('#uname').textContent=me.name;$('#urole').textContent=me.role.toLowerCase();
+ $('#nav').innerHTML=NAV[me.role].map(n=>`<a id="n_${n[0]}" onclick="go('${n[0]}')"><span>${n[2]}</span><span>${n[1]}</span></a>`).join('');go(NAV[me.role][0][0])}
+async function go(v){document.querySelectorAll('aside a').forEach(a=>a.classList.toggle('on',a.id=='n_'+v));try{$('#main').innerHTML=await V[v]()}catch(e){$('#main').innerHTML=`<div class="card">${esc(e.message)}</div>`}}
+function setSec(s){currentSection=s;go('practice')}
+const badge=s=>`<span class="badge ${s}">${s}</span>`;
+const V={
+ async practice(){
+   EX=await api('exercises');
+   const p=await api('exercises/progress');
+   const bCount=`${p.basic_solved||0}/${p.basic_total||0}`;
+   const mCount=`${p.medium_solved||0}/${p.medium_total||0}`;
+   const aCount=`${p.advanced_solved||0}/${p.advanced_total||0}`;
+   const tabsHtml=`<div class="sec-tabs">
+     <button class="sec-tab ${currentSection=='BASIC'?'on':''}" onclick="setSec('BASIC')">Basic <span class="count">${bCount}</span></button>
+     <button class="sec-tab ${currentSection=='MEDIUM'?'on':''}" onclick="setSec('MEDIUM')">Medium <span class="count">${mCount}</span></button>
+     <button class="sec-tab ${currentSection=='ADVANCED'?'on':''}" onclick="setSec('ADVANCED')">Advanced <span class="count">${aCount}</span></button>
+   </div>`;
+   const secExs=EX.filter(e=>e.section===currentSection);
+   if(secExs.length===0){
+     return `<h2>Practice</h2><p class="mute">Pick a level and start coding.</p>${tabsHtml}
+     <div class="card" style="text-align:center;padding:50px 20px">
+       <div style="font-size:2.5rem;margin-bottom:10px">🌱</div>
+       <h3>Coming soon</h3>
+       <p class="mute">${currentSection.charAt(0)+currentSection.slice(1).toLowerCase()} practice exercises are currently being prepared. Complete the Basic section first!</p>
+     </div>`;
+   }
+   const rows=secExs.map((e,idx)=>`
+      <div class="ex-row" onclick="openEx(${e.id})">
+        <div class="ex-left">
+          <span class="ex-num">${idx+1}</span>
+          <span class="ex-title">${esc(e.title)}</span>
+        </div>
+        <div>${badge(e.difficulty)}</div>
+      </div>`).join('');
+    return `<h2>Practice</h2><p class="mute">Pick a question and start coding.</p>${tabsHtml}<div class="practice-list">${rows}</div>`;
+ },
+ async progress(){
+    const p=await api('exercises/progress');
+    const pc=p.total?Math.round(100*p.solved/p.total):0;
+    const bpc=p.basic_total?Math.round(100*(p.basic_solved||0)/p.basic_total):0;
+    const mpc=p.medium_total?Math.round(100*(p.medium_solved||0)/p.medium_total):0;
+    const apc=p.advanced_total?Math.round(100*(p.advanced_solved||0)/p.advanced_total):0;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 style="margin:0">My progress</h2>
+      <button class="ghost-bad sm" onclick="resetProgress()">Reset progress</button>
+    </div>
+    <div class="grid stats">
+      <div class="card"><div class="mute">Solved</div><div class="big">${p.solved||0}/${p.total||0}</div></div>
+      <div class="card"><div class="mute">Completion</div><div class="big">${pc}%</div></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <b>Overall completion</b>
+      <div class="bar" style="margin-top:10px"><i style="width:${pc}%"></i></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <b>Section Breakdown</b>
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:14px">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:13px"><b>Basic</b><span>${p.basic_solved||0}/${p.basic_total||0} (${bpc}%)</span></div>
+          <div class="bar" style="margin-top:6px"><i style="width:${bpc}%"></i></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:13px"><b>Medium</b><span>${p.medium_solved||0}/${p.medium_total||0} (${mpc}%)</span></div>
+          <div class="bar" style="margin-top:6px"><i style="width:${mpc}%"></i></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:13px"><b>Advanced</b><span>${p.advanced_solved||0}/${p.advanced_total||0} (${apc}%)</span></div>
+          <div class="bar" style="margin-top:6px"><i style="width:${apc}%"></i></div>
+        </div>
+      </div>
+    </div>`;
+  },
+  async mine(){
+   const l=await api('exercises');
+   return `<h2>My exercises</h2><div class="card"><table><tr><th>Title</th><th>Section</th><th>Difficulty</th><th>Status</th></tr>${l.map(e=>`<tr><td>${esc(e.title)}</td><td><span class="badge ${e.section}">${esc(e.section)}</span></td><td>${badge(e.difficulty)}</td><td>${badge(e.status)}</td></tr>`).join('')}</table></div>`;
+ },
+ async create(){
+   return `<h2>Create practice exercise</h2><p class="mute">Instructor submissions are reviewed by an admin before students see them.</p>
+   <div class="card">
+     <label>Title</label><input id="c_t">
+     <label>Description</label><textarea id="c_d" rows="3"></textarea>
+     <label>Section</label>
+     <select id="c_sec"><option value="BASIC">Basic</option><option value="MEDIUM">Medium</option><option value="ADVANCED">Advanced</option></select>
+     <label>Difficulty</label>
+     <select id="c_f"><option>EASY</option><option>MEDIUM</option><option>HARD</option></select>
+     <label>Sample input (optional)</label><textarea id="c_i" rows="2" placeholder="Standard input passed to program"></textarea>
+     <label>Starter code (optional)</label><textarea class="code" id="c_s" style="min-height:90px"></textarea>
+     <label>Expected output</label><textarea id="c_o" rows="3" placeholder="Exact text the program must print"></textarea>
+     <button onclick="createEx()">Submit exercise</button>
+   </div>`;
+ },
+ async overview(){
+   const s=await api('admin/stats'),mx=Math.max(1,...s.week.map(w=>w.total));
+   return `<h2>Overview</h2><div class="grid stats"><div class="card"><div class="mute">Students</div><div class="big">${s.students}</div></div><div class="card"><div class="mute">Instructors</div><div class="big">${s.instructors}</div></div><div class="card"><div class="mute">Pending approval</div><div class="big">${s.pending}</div></div><div class="card"><div class="mute">Submissions</div><div class="big">${s.submissions}</div></div></div><div class="card" style="margin-top:14px"><b>Submissions – last 7 days</b><div class="chart">${s.week.map(w=>`<div><div class="col"><i style="height:${100*w.total/mx}%" title="${w.passed} passed"></i></div>${w.d}<br><b>${w.total}</b></div>`).join('')||'<span class="mute">No activity yet</span>'}</div></div>`;
+ },
+ async review(){
+   const l=await api('exercises');
+   return `<h2>Exercises</h2><div class="card"><table><tr><th>Title</th><th>By</th><th>Section</th><th>Level</th><th>Status</th><th></th></tr>${l.map(e=>`<tr><td><b>${esc(e.title)}</b><div class="mute">${esc(e.description).slice(0,70)}</div></td><td>${esc(e.author)}</td><td><span class="badge ${e.section}">${esc(e.section)}</span></td><td>${badge(e.difficulty)}</td><td>${badge(e.status)}</td><td>${e.status=='PENDING'?`<button class="ok sm" onclick="review(${e.id},'APPROVED')">Approve</button> <button class="bad sm" onclick="review(${e.id},'REJECTED')">Reject</button>`:''}</td></tr>`).join('')}</table></div>`;
+ },
+ async users(){
+   const l=await api('admin/users');
+   return `<h2>Users</h2><div class="card" style="overflow:auto"><table><tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr>${l.map(u=>`<tr><td>${esc(u.name)}</td><td>${esc(u.email)}</td><td>${esc(u.role)}</td><td>${u.id==me.id?'':`<button class="bad sm" onclick="delUser(${u.id})">Delete</button>`}</td></tr>`).join('')}</table></div>`;
+ }
+};
+
+async function openEx(id){
+  const e=EX.find(x=>x.id==id);
+  if(!e)return;
+  let exp=e.expected_output;
+  if(exp===undefined||exp===null){
+    try{const d=await api('exercises/expected?id='+id);exp=d.expected_output||'';}catch(_){exp='';}
+  }
+  $('#main').innerHTML=`
+    <button class="ghost sm" onclick="go('practice')">← Back to Practice</button>
+    <div class="work" style="margin-top:12px">
+      <div class="card">
+        <div class="sec-tabs" style="margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:10px">
+          <button id="tab_btn_prob" class="sec-tab on" onclick="switchExTab(${e.id},'problem')">Problem</button>
+          <button id="tab_btn_sol" class="sec-tab" onclick="switchExTab(${e.id},'solution')"><span id="tab_sol_lock">${e.attempted?'':'🔒 '}</span>Solution</button>
+        </div>
+        <div class="topic-strip">
+          ${esc(e.topic || 'Variables and operators')}
+        </div>
+        <div id="pane_problem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <h2 style="margin:0;font-size:1.25rem">${esc(e.title)}</h2>
+            <div>${badge(e.difficulty)}</div>
+          </div>
+          <p style="white-space:pre-wrap;line-height:1.6;margin-top:8px">${esc(e.description)}</p>
+          ${e.learn_text?`
+          <div class="learn-box">
+            <b>💡 What you will learn</b>
+            <div>${esc(e.learn_text)}</div>
+          </div>`:''}
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0">
+            <div class="sample-box">
+              <label>Sample Input</label>
+              <pre class="sample-val">${esc(e.sample_input||'(none)')}</pre>
+            </div>
+            <div class="sample-box">
+              <label>Expected Output</label>
+              <pre class="sample-val">${esc(exp)}</pre>
+            </div>
+          </div>
+        </div>
+        <div id="pane_solution" hidden>
+          <div id="sol_locked" ${e.attempted?'hidden':''} style="text-align:center;padding:40px 16px;background:var(--bg);border:1px dashed var(--line);border-radius:10px">
+            <div style="font-size:2rem;margin-bottom:8px">🔒</div>
+            <div style="font-weight:600;color:var(--mute);font-size:14px">Run your code at least once to unlock the solution</div>
+          </div>
+          <div id="sol_unlocked" ${!e.attempted?'hidden':''}>
+            <label style="font-size:12px;color:var(--mute);font-weight:700;display:block;margin-bottom:6px">Reference Solution</label>
+            <pre class="code" id="sol_code_view" style="margin:0;border-radius:10px;padding:14px;max-height:400px;overflow:auto;white-space:pre"></pre>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="editor-header">
+          <div class="lang-chip"><span>🐍</span> <span>Python 3</span></div>
+          <span class="mute" style="font-size:12px">Ctrl+Enter to run</span>
+        </div>
+        <textarea class="code" id="code" spellcheck="false" style="margin:0">${esc(e.starter_code||'# Write your code below\n')}</textarea>
+        <div style="margin-top:10px"><button id="run" onclick="run(${e.id})">▶ Run &amp; check</button></div>
+        <div id="res"></div>
+        <div style="margin-top:10px">
+          <label style="font-size:12px;color:var(--mute)">Console Output (Input: ${esc(e.sample_input?e.sample_input.replace(/\n/g,' '):'none')})</label>
+          <div class="console" id="out">Output appears here…</div>
+        </div>
+      </div>
+    </div>
+  `;
+  const t=$('#code');
+  t.onkeydown=k=>{
+    if(k.key=='Tab'){k.preventDefault();const s=t.selectionStart;t.setRangeText('    ',s,t.selectionEnd,'end');}
+    if(k.ctrlKey&&k.key=='Enter')run(id);
+  };
+}
+
+async function switchExTab(id, tab){
+  const e=EX.find(x=>x.id==id);
+  if(!e) return;
+  const btnP=$('#tab_btn_prob'), btnS=$('#tab_btn_sol');
+  const pP=$('#pane_problem'), pS=$('#pane_solution');
+  if(tab==='problem'){
+    btnP.classList.add('on'); btnS.classList.remove('on');
+    pP.hidden=false; pS.hidden=true;
+  }else{
+    btnP.classList.remove('on'); btnS.classList.add('on');
+    pP.hidden=true; pS.hidden=false;
+    const locked=$('#sol_locked'), unlocked=$('#sol_unlocked');
+    if(!e.attempted){
+      locked.hidden=false;
+      unlocked.hidden=true;
+    }else{
+      locked.hidden=true;
+      unlocked.hidden=false;
+      const view=$('#sol_code_view');
+      if(e.solution_code){
+        view.textContent=e.solution_code;
+      }else{
+        view.textContent='Loading solution…';
+        try{
+          const d=await api('exercises/solution?id='+id);
+          e.solution_code=d.solution_code||'# No solution provided';
+          view.textContent=e.solution_code;
+        }catch(err){
+          view.textContent=err.message||'Failed to load solution';
+        }
+      }
+    }
+  }
+}
+
+async function run(id){
+  const b=$('#run');b.disabled=true;b.textContent='Running…';
+  try{
+    const r=await api('run','POST',{id,code:$('#code').value});
+    $('#out').textContent=r.output||'(no output)';
+    $('#res').innerHTML=`<div class="res ${r.passed?'pass':'fail'}">${r.passed?'✅ Correct! Exercise solved.':r.stage=='compile'?'❌ Syntax error – fix and retry':r.timedOut?'⏱ Time limit exceeded':'❌ Output does not match yet'}</div>`;
+    const item=EX.find(x=>x.id==id);
+    if(item){
+      item.attempted=true;
+      if(r.passed) item.solved=1;
+    }
+    const lockSpan=$('#tab_sol_lock');
+    if(lockSpan) lockSpan.textContent='';
+    const pS=$('#pane_solution');
+    if(pS && !pS.hidden){
+      switchExTab(id,'solution');
+    }
+  }catch(e){toast(e.message,1)}
+  b.disabled=false;b.textContent='▶ Run & check';
+}
+
+async function resetProgress(){
+  if(!confirm("Reset all your progress to zero? This cannot be undone.")) return;
+  try{
+    await api('exercises/reset-progress','POST');
+    toast('Progress reset to zero');
+    setTimeout(()=>location.reload(),600);
+  }catch(e){
+    toast(e.message,1);
+  }
+}
+
+async function createEx(){
+  try{
+    await api('exercises','POST',{
+      title:$('#c_t').value,
+      description:$('#c_d').value,
+      section:$('#c_sec').value,
+      difficulty:$('#c_f').value,
+      sample_input:$('#c_i').value,
+      starter_code:$('#c_s').value,
+      expected_output:$('#c_o').value
+    });
+    toast('Exercise submitted');go('mine');
+  }catch(e){toast(e.message,1)}
+}
+
+async function review(id,status){await api('exercises/review','POST',{id,status});toast(status.toLowerCase());go('review')}
+async function delUser(id){if(confirm('Delete this user and their data?')){await api('admin/delete','POST',{id});go('users')}}
+(async()=>{try{me=await api('auth/me');start()}catch{$('#auth').hidden=false;tab(1)}})();
+</script></body></html>
